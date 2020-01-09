@@ -71,10 +71,10 @@ Example: `(2 + (3 - 1) * (3 + 14 - 10)) / 4 % 9`
 ## Examples
 
 ```
-var $calculation
-var $something
-let $something = 8375
-let $calculation = 7 + $something - 4
+VAR $calculation
+VAR $something
+LET $something = 8375
+LET $calculation = 7 + $something - 4
 ```
 
 ```

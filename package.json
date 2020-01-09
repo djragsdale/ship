@@ -1,0 +1,14 @@
+{
+  "name": "ship",
+  "version": "0.1.0",
+  "description": "A parser for a made up language",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "David Ragsdale",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "arcsecond": "^2.0.3"
+  }
+}

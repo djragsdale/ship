@@ -78,7 +78,6 @@ LET $something = 8375
 LET $calculation = 7 + $something - 4
 ```
 
-TODO: Replace GOTO code with PROC code
 ```
 BEGIN "LOOP-TEST"
 REM Declare all variables
@@ -86,12 +85,10 @@ VAR $VAR1
 ECHO "LOOP TEST BEGINNING..."
 LET $VAR1 = 0
 ECHO "ECHOING HELLO WORLD #1 TIMES"
-IF $VAR1 < #1
-GOTO 9
-GOTO 12
+WHILE ($VAR1 < 1)
 ECHO "HELLO, WORLD!"
-LET $VAR1 = $VAR1 + 1
-GOTO 6
+LET $VAR1 = ($VAR1 + 1)
+ENDWHILE
 ECHO "DONE LOOPING."
 ECHO "SUCCESS!"
 EXIT "LOOP-TEST"

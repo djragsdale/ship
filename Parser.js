@@ -17,21 +17,6 @@ const {
   str,
 } = require('arcsecond');
 
-// TODO: Replace GOTO code with PROC code
-const code = `BEGIN "LOOP-TEST"
-REM Declare all variables
-VAR $VAR1
-ECHO "LOOP TEST BEGINNING..."
-LET $VAR1 = 0
-ECHO "ECHOING HELLO WORLD #1 TIMES"
-WHILE ($VAR1 < 1)
-ECHO "HELLO, WORLD!"
-LET $VAR1 = ($VAR1 + 1)
-ENDWHILE
-ECHO "DONE LOOPING."
-ECHO "SUCCESS!"
-EXIT "LOOP-TEST"`;
-
 // - Boolean
 // - Character
 // - String
@@ -255,7 +240,12 @@ const expression = recursiveParser(() => (
         primitive,
         variableName,
       ]),
-    ])).map(([left,, op,, right]) => [left, op, right]),
+    ])).map(([left,, op,, right]) => ({
+      type: 'expression',
+      left,
+      right,
+      operator: op,
+    })),
     variableName,
   ])
 ));
@@ -319,12 +309,25 @@ const callLine = sequenceOf([
       sepBy(space, anyStatement),
     ]),
   ]),
-]);
+])
+.map(([keyword, , name]) => {
+  // TODO: parse arguments
+  return {
+    type: 'statement',
+    keyword: keyword,
+    value: name,
+  };
+});
 const echoLine = sequenceOf([
   echoKeyword,
   space,
   stringStatement,
-]).map(([keyword,, statement]) => [keyword, statement]);
+])
+.map(([keyword,, statement]) => ({
+  type: 'statement',
+  keyword: keyword,
+  statement: statement,
+}));
 const elseLine = sequenceOf([
   elseKeyword,
 ]);
@@ -430,6 +433,4 @@ const script = many(sequenceOf([
 
 const Parser = script;
 
-const ast = Parser.run(code);
-
-console.log(JSON.stringify(ast, null, 2));
+module.exports = Parser;

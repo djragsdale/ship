@@ -10,8 +10,8 @@ const {
   letters,
   many,
   many1,
-  parse,
   possibly,
+  recursiveParser,
   sepBy,
   sequenceOf,
   str,
@@ -24,7 +24,7 @@ VAR $VAR1
 ECHO "LOOP TEST BEGINNING..."
 LET $VAR1 = 0
 ECHO "ECHOING HELLO WORLD #1 TIMES"
-IF $VAR1 < #1
+IF ($VAR1 < 1)
 GOTO 9
 GOTO 12
 ECHO "HELLO, WORLD!"
@@ -45,6 +45,7 @@ const mapToType = (type) => (value) => ({
 });
 const mapToNull = mapToType('null');
 const mapToKeyword = mapToType('keyword');
+const mapToOperator = mapToType('operator');
 const mapToBoolean = mapToType('boolean');
 const mapToCharacter = mapToType('character');
 const mapToString = mapToType('string');
@@ -59,9 +60,12 @@ const keywords = {
   '__COLUMN': '__COLUMN',
   '__LINE': '__LINE',
   'BEGIN': 'BEGIN',
+  'CALL': 'CALL',
   'ECHO': 'ECHO',
   'ELSE': 'ELSE',
+  'ENDFUNC': 'ENDFUNC',
   'ENDIF': 'ENDIF',
+  'ENDPROC': 'ENDPROC',
   'ENDWHILE': 'ENDWHILE',
   'EXIT': 'EXIT',
   'FUNC': 'FUNC',
@@ -71,6 +75,7 @@ const keywords = {
   'PAUSE': 'PAUSE',
   'PROC': 'PROC',
   'REM': 'REM',
+  'RETURN': 'RETURN',
   'VAR': 'VAR',
   'WHILE': 'WHILE',
 };
@@ -78,9 +83,12 @@ const keywords = {
 const __columnKeyword = str(keywords.__COLUMN).map(mapToKeyword);
 const __lineKeyword = str(keywords.__LINE).map(mapToKeyword);
 const beginKeyword = str(keywords.BEGIN).map(mapToKeyword);
+const callKeyword = str(keywords.CALL).map(mapToKeyword);
 const echoKeyword = str(keywords.ECHO).map(mapToKeyword);
 const elseKeyword = str(keywords.ELSE).map(mapToKeyword);
+const endFuncKeyword = str(keywords.ENDFUNC).map(mapToKeyword);
 const endIfKeyword = str(keywords.ENDIF).map(mapToKeyword);
+const endProcKeyword = str(keywords.ENDPROC).map(mapToKeyword);
 const endWhileKeyword = str(keywords.ENDWHILE).map(mapToKeyword);
 const exitKeyword = str(keywords.EXIT).map(mapToKeyword);
 const funcKeyword = str(keywords.FUNC).map(mapToKeyword);
@@ -92,6 +100,7 @@ const pauseKeyword = str(keywords.PAUSE).map(mapToKeyword);
 const procKeyword = str(keywords.PROC).map(mapToKeyword);
 // const structKeyword = str('STRUCT');
 const remKeyword = str(keywords.REM).map(mapToKeyword);
+const returnKeyword = str(keywords.RETURN).map(mapToKeyword);
 const varKeyword = str(keywords.VAR).map(mapToKeyword);
 const whileKeyword = str(keywords.WHILE).map(mapToKeyword);
 
@@ -99,9 +108,12 @@ const keyword = choice([
   __columnKeyword,
   __lineKeyword,
   beginKeyword,
+  callKeyword,
   echoKeyword,
   elseKeyword,
+  endFuncKeyword,
   endIfKeyword,
+  endProcKeyword,
   endWhileKeyword,
   exitKeyword,
   funcKeyword,
@@ -113,15 +125,52 @@ const keyword = choice([
   procKeyword,
   // structKeyword,
   remKeyword,
+  returnKeyword,
   varKeyword,
   whileKeyword,
 ]);
 
 // Operators
-
+// - Assignment
+const equalsOp = char('=').map(mapToOperator);
+const assignOperator = choice([
+  equalsOp,
+]);
+// - Grouping
+const startGroupOp = char('(').map(mapToOperator);
+const endGroupOp = char(')').map(mapToOperator);
+const groupOperator = choice([
+  startGroupOp,
+  endGroupOp,
+]);
+// - Arithmetic
+const addOp = char('+').map(mapToOperator);
+const subtractOp = char('-').map(mapToOperator);
+const multiplyOp = char('*').map(mapToOperator);
+const divideOp = char('-').map(mapToOperator);
+const modOp = char('%').map(mapToOperator);
+const powerOp = char('^').map(mapToOperator);
+const arithmeticOperator = choice([
+  addOp,
+  subtractOp,
+  multiplyOp,
+  divideOp,
+  modOp,
+  powerOp,
+]);
+// - Boolean
+const lessThanOp = char('<').map(mapToOperator);
+const greaterThanOp = char('>').map(mapToOperator);
+const equalToOp = str('==').map(mapToOperator);
+const notEqualToOp = str('!=').map(mapToOperator);
+const booleanOperator = choice([
+  lessThanOp,
+  greaterThanOp,
+  equalToOp,
+  notEqualToOp,
+]);
 
 // Special characters
-const equal = char('=');
 const newLine = char('\n').map(mapToNull);
 const quote = char('"');
 const singleQuote = char('\'');
@@ -155,6 +204,11 @@ const symbol = choice([
   char('/'),
   char(';'),
   char(':'),
+  char('-'),
+  char('='),
+  char('_'),
+  char('+'),
+  char('|'),
 ])
 
 // Primitives:
@@ -185,6 +239,31 @@ const arrayValue = between(char('['))(char(']'))(sepBy(char(','), choice([
   primitive,
 ]))).map(mapToArray);
 
+const expression = recursiveParser(() => (
+  choice([
+    between(startGroupOp)(endGroupOp)(sequenceOf([
+      choice([
+        expression,
+        primitive,
+        variableName,
+      ]),
+      space,
+      choice([
+        arithmeticOperator,
+        booleanOperator,
+      ]),
+      space,
+      choice([
+        expression,
+        primitive,
+        variableName,
+      ]),
+    ])).map(([left,, op,, right]) => [left, op, right]),
+    variableName,
+  ])
+));
+
+// Should I call these expressions instead of statements?
 // Statements:
 // - Boolean
 // - Character
@@ -192,8 +271,8 @@ const arrayValue = between(char('['))(char(']'))(sepBy(char(','), choice([
 // - Float
 // - Array
 const booleanStatement = choice([
+  expression,
   booleanValue,
-  variableName,
   // TODO: Determine valid boolean statement
 ]);
 const characterStatement = choice([
@@ -205,8 +284,9 @@ const stringStatement = choice([
   variableName, // TODO: Check that variable is type string
 ]);
 const floatStatement = choice([
-  floatValue,
+  expression,
   variableName,
+  floatValue,
 ]);
 const arrayStatement = arrayValue;
 const anyStatement = choice([
@@ -225,17 +305,35 @@ const beginLine = sequenceOf([
     letters,
     stringValue,
   ]),
+]).map(([keyword,, name]) => [keyword, name]);
+const callLine = sequenceOf([
+  callKeyword,
+  space,
+  choice([
+    procName,
+    sequenceOf([
+      funcName,
+      space,
+      sepBy(space, anyStatement),
+    ]),
+  ]),
 ]);
 const echoLine = sequenceOf([
   echoKeyword,
   space,
   stringStatement,
-]);
+]).map(([keyword,, statement]) => [keyword, statement]);
 const elseLine = sequenceOf([
   elseKeyword,
 ]);
+const endFuncLine = sequenceOf([
+  endFuncKeyword,
+]);
 const endIfLine = sequenceOf([
   endIfKeyword,
+]);
+const endProcLine = sequenceOf([
+  endProcKeyword,
 ]);
 const endWhileLine = sequenceOf([
   endWhileKeyword,
@@ -253,7 +351,7 @@ const ifLine = sequenceOf([
   ifKeyword,
   space,
   booleanStatement,
-]);
+]).map(([keyword,, statement]) => [keyword, statement]);
 const inputLine = sequenceOf([
   inputKeyword,
   space,
@@ -266,10 +364,10 @@ const letLine = sequenceOf([
   space,
   variableName,
   space,
-  equal,
+  equalsOp,
   space,
   anyStatement,
-]);
+]).map(([keyword,, varName,, op,, statement]) => [keyword, varName, op, statement]);
 const pauseLine = sequenceOf([
   pauseKeyword,
   space,
@@ -284,12 +382,17 @@ const remLine = sequenceOf([
   remKeyword,
   space,
   commentStatement,
-]);
+]).map(([keyword,, statement]) => [keyword, statement]);
+const returnLine = sequenceOf([
+  returnKeyword,
+  space,
+  anyStatement,
+])
 const varLine = sequenceOf([
   varKeyword,
   space,
   variableName,
-]);
+]).map(([keyword,, statement]) => [keyword, statement]);
 const whileLine = sequenceOf([
   whileKeyword,
   space,
@@ -298,9 +401,12 @@ const whileLine = sequenceOf([
 
 const codeLine = choice([
   beginLine,
+  callLine,
   echoLine,
   elseLine,
+  endFuncLine,
   endIfLine,
+  endProcLine,
   endWhileLine,
   exitLine,
   funcLine,
@@ -310,6 +416,7 @@ const codeLine = choice([
   pauseLine,
   procLine,
   remLine,
+  returnLine,
   varLine,
   whileLine,
 ]);
@@ -317,7 +424,7 @@ const codeLine = choice([
 const script = many(sequenceOf([
   codeLine,
   possibly(newLine),
-]));
+]).map(([line]) => [line]));
 
 const Parser = script;
 

@@ -42,7 +42,6 @@ const mapToType = (type) => (value) => ({
   value,
 });
 const mapToNull = mapToType('null');
-const mapToKeyword = mapToType('keyword');
 const mapToOperator = mapToType('operator');
 const mapToBoolean = mapToType('boolean');
 const mapToCharacter = mapToType('character');
@@ -78,29 +77,29 @@ const keywords = {
   'WHILE': 'WHILE',
 };
 
-const __columnKeyword = str(keywords.__COLUMN).map(mapToKeyword);
-const __lineKeyword = str(keywords.__LINE).map(mapToKeyword);
-const beginKeyword = str(keywords.BEGIN).map(mapToKeyword);
-const callKeyword = str(keywords.CALL).map(mapToKeyword);
-const echoKeyword = str(keywords.ECHO).map(mapToKeyword);
-const elseKeyword = str(keywords.ELSE).map(mapToKeyword);
-const endFuncKeyword = str(keywords.ENDFUNC).map(mapToKeyword);
-const endIfKeyword = str(keywords.ENDIF).map(mapToKeyword);
-const endProcKeyword = str(keywords.ENDPROC).map(mapToKeyword);
-const endWhileKeyword = str(keywords.ENDWHILE).map(mapToKeyword);
-const exitKeyword = str(keywords.EXIT).map(mapToKeyword);
-const funcKeyword = str(keywords.FUNC).map(mapToKeyword);
+const __columnKeyword = str(keywords.__COLUMN);
+const __lineKeyword = str(keywords.__LINE);
+const beginKeyword = str(keywords.BEGIN);
+const callKeyword = str(keywords.CALL);
+const echoKeyword = str(keywords.ECHO);
+const elseKeyword = str(keywords.ELSE);
+const endFuncKeyword = str(keywords.ENDFUNC);
+const endIfKeyword = str(keywords.ENDIF);
+const endProcKeyword = str(keywords.ENDPROC);
+const endWhileKeyword = str(keywords.ENDWHILE);
+const exitKeyword = str(keywords.EXIT);
+const funcKeyword = str(keywords.FUNC);
 // const gotoKeyword = str('GOTO');
-const ifKeyword = str(keywords.IF).map(mapToKeyword);
-const inputKeyword = str(keywords.INPUT).map(mapToKeyword);
-const letKeyword = str(keywords.LET).map(mapToKeyword);
-const pauseKeyword = str(keywords.PAUSE).map(mapToKeyword);
-const procKeyword = str(keywords.PROC).map(mapToKeyword);
+const ifKeyword = str(keywords.IF);
+const inputKeyword = str(keywords.INPUT);
+const letKeyword = str(keywords.LET);
+const pauseKeyword = str(keywords.PAUSE);
+const procKeyword = str(keywords.PROC);
 // const structKeyword = str('STRUCT');
-const remKeyword = str(keywords.REM).map(mapToKeyword);
-const returnKeyword = str(keywords.RETURN).map(mapToKeyword);
-const varKeyword = str(keywords.VAR).map(mapToKeyword);
-const whileKeyword = str(keywords.WHILE).map(mapToKeyword);
+const remKeyword = str(keywords.REM);
+const returnKeyword = str(keywords.RETURN);
+const varKeyword = str(keywords.VAR);
+const whileKeyword = str(keywords.WHILE);
 
 const keyword = choice([
   __columnKeyword,
@@ -303,7 +302,12 @@ const beginLine = sequenceOf([
     letters,
     stringValue,
   ]),
-]).map(([keyword,, name]) => [keyword, name]);
+])
+.map(([keyword,, name]) => ({
+  type: 'statement',
+  keyword: keyword,
+  value: name,
+}));
 const callLine = sequenceOf([
   callKeyword,
   space,
@@ -385,7 +389,7 @@ const returnLine = sequenceOf([
   returnKeyword,
   space,
   anyStatement,
-])
+]);
 const varLine = sequenceOf([
   varKeyword,
   space,
@@ -421,8 +425,8 @@ const codeLine = choice([
 
 const script = many(sequenceOf([
   codeLine,
-  possibly(newLine),
-]).map(([line]) => [line]));
+  possibly(many(newLine)),
+]).map(([line]) => line));
 
 const Parser = script;
 

@@ -25,6 +25,8 @@ The following types are available out of the box.
 
 ### Keywords
 
+- True - boolean "true" value
+- False - boolean "false" value
 - ECHO - output the following evaluated statement
 - BEGIN - define program 
 - EXIT - stop interpreter evaluation
@@ -38,7 +40,6 @@ The following types are available out of the box.
 - VAR - declare variable
 - LET - assign variable
 - INPUT - assign a variable based on user input to the prompt string following the statement. Format: `INPUT $myVariable "What do you want?"`
-- GOTO - move interpreter evaluation to a specified line of code, equal to the evaluated statement following the keyword.
 - __LINE - the current line of the interpreter
 - __COLUMN - the current column of the interpreter
 - PROC - declare a procedure. Can have side effects, will not receive own scope, and must not declare new variables.
@@ -77,6 +78,7 @@ LET $something = 8375
 LET $calculation = 7 + $something - 4
 ```
 
+TODO: Replace GOTO code with PROC code
 ```
 BEGIN "LOOP-TEST"
 REM Declare all variables

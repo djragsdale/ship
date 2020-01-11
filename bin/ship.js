@@ -10,4 +10,6 @@ const main = async () => {
   await execute(resolvedPath);
 };
 
-main();
+try {
+  main();
+} catch (err) {}

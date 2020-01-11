@@ -15,6 +15,7 @@ const {
   sepBy,
   sequenceOf,
   str,
+  takeRight,
 } = require('arcsecond');
 
 const keywords = require('./keywords');
@@ -298,6 +299,35 @@ const anyStatement = choice([
 ]);
 const commentStatement = everythingUntil(newLine).map(mapToComment);
 
+const endFuncLine = sequenceOf([
+  endFuncKeyword,
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
+const endIfLine = sequenceOf([
+  endIfKeyword,
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
+const endProcLine = sequenceOf([
+  endProcKeyword,
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
+const endWhileLine = sequenceOf([
+  endWhileKeyword,
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
+
 const beginLine = sequenceOf([
   beginKeyword,
   space,
@@ -333,34 +363,6 @@ const echoLine = sequenceOf([
 }));
 const elseLine = sequenceOf([
   elseKeyword,
-])
-.map(([keyword]) => ({
-  type: 'statement',
-  keyword: keyword,
-}));
-const endFuncLine = sequenceOf([
-  endFuncKeyword,
-])
-.map(([keyword]) => ({
-  type: 'statement',
-  keyword: keyword,
-}));
-const endIfLine = sequenceOf([
-  endIfKeyword,
-])
-.map(([keyword]) => ({
-  type: 'statement',
-  keyword: keyword,
-}));
-const endProcLine = sequenceOf([
-  endProcKeyword,
-])
-.map(([keyword]) => ({
-  type: 'statement',
-  keyword: keyword,
-}));
-const endWhileLine = sequenceOf([
-  endWhileKeyword,
 ])
 .map(([keyword]) => ({
   type: 'statement',
@@ -508,35 +510,142 @@ const whileLine = sequenceOf([
   condition,
 }));
 
-const codeLine = choice([
-  beginLine,
+const noMemoryLine = choice([
   callLine,
   echoLine,
-  elseLine,
-  endFuncLine,
-  endIfLine,
-  endProcLine,
-  endWhileLine,
-  exitLine,
-  funcLine,
-  ifLine,
   inputLine,
   letLine,
   pauseLine,
-  procLine,
   remLine,
-  returnLine,
-  varLine,
-  whileLine,
 ]);
 
-const blockParser = recursiveParser(() => (many(sequenceOf([
-  codeLine,
-  possibly(many(newLine)),
-]).map(([line]) => line)).map(lines => ({
+const simpleCodeLine = choice([
+  noMemoryLine,
+  varLine,
+]);
+
+// TODO: Handle ELSE
+const ifBlock = sequenceOf([
+  ifLine,
+  sequenceOf([
+    newLine,
+    many1(
+      sequenceOf([
+        noMemoryLine,
+        newLine,
+      ]).map(([nml]) => nml),
+    ),
+  ]).map(([, line]) => line),
+  endIfLine,
+]).map(([w, block]) => ({
+  ...w,
+  block,
+}));
+
+const whileBlock = sequenceOf([
+  whileLine,
+  sequenceOf([
+    newLine,
+    many1(
+      sequenceOf([
+        choice([
+          noMemoryLine,
+          ifBlock,
+        ]),
+        newLine,
+      ]).map(([stmt]) => stmt),
+    ),
+  ]).map(([, line]) => line),
+  endWhileLine,
+]).map(([w, block]) => ({
+  ...w,
+  block,
+}));
+
+const procBlock = sequenceOf([
+  procLine,
+  sequenceOf([
+    newLine,
+    many1(
+      sequenceOf([
+        choice([
+          noMemoryLine,
+          ifBlock,
+          whileBlock,
+        ]),
+        newLine,
+      ]).map(([stmt]) => stmt),
+    ),
+  ]).map(([, line]) => line),
+  endProcLine,
+]).map(([w, block]) => ({
+  ...w,
+  block,
+}));
+
+// Should functions be able to contain other functions?
+// They're scoped so function names shouldn't collide with external function names.
+const funcBlock = sequenceOf([
+  funcLine,
+  sequenceOf([
+    newLine,
+    many1(
+      sequenceOf([
+        choice([
+          simpleCodeLine,
+          ifBlock,
+          whileBlock,
+          returnLine,
+        ]),
+        newLine,
+      ]).map(([stmt]) => stmt),
+    ),
+  ]).map(([, line]) => line),
+  endFuncLine,
+]).map(([w, block]) => ({
+  ...w,
+  block,
+}));
+
+const codeLine = recursiveParser(() => (choice([
+  simpleCodeLine,
+  ifBlock,
+  whileBlock,
+  procBlock,
+  funcBlock,
+])));
+
+const blockParser = sequenceOf([
+  // BEGIN
+  sequenceOf([
+    beginLine,
+    possibly(many(newLine)),
+  ])
+  .map(([line]) => line),
+  // Everything in between
+  many(
+    sequenceOf([
+      codeLine,
+      possibly(many(newLine)),
+    ])
+    .map(([line]) => line)
+  ),
+  // EXIT
+  sequenceOf([
+    exitLine,
+    possibly(many(newLine)),
+  ])
+  .map(([line]) => line),
+])
+.map(([beginLine, lines, exitLine]) => ([
+  beginLine,
+  ...lines,
+  exitLine,
+]))
+.map(lines => ({
   type: 'program',
   lines,
-}))));
+}));
 
 const Parser = blockParser;
 

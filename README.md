@@ -37,14 +37,14 @@ The following types are available out of the box.
 - ENDIF
 - WHILE
 - ENDWHILE
-- VAR - declare variable
+- VAR - declare variable. TODO: Define type for strong typing.
 - LET - assign variable
 - INPUT - assign a variable based on user input to the prompt string following the statement. Format: `INPUT $myVariable "What do you want?"`
 - __LINE - the current line of the interpreter
 - __COLUMN - the current column of the interpreter
 - PROC - declare a procedure. Can have side effects, will not receive own scope, and must not declare new variables.
 - FUNC - declare a function. Must not have side effects, will receive own scope, and can declare new variables within own scope.
-- STRUCT - declare a memory structure. Specific properties are allocated memory ranges and are interpreted as one of the declared primitive types.
+- STRUCT - declare a memory structure. Specific properties are allocated memory ranges and are interpreted as one of the declared primitive types. Comes before BEGIN statement.
 
 No current method exists for error handling or exception catching. It will have to come at some point but isn't here yet.
 

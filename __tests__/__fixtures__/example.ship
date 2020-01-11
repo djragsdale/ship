@@ -5,21 +5,27 @@ VAR $Input
 ECHO "Testing everything..."
 INPUT $Input "What should I output?"
 LET $VAR1 = 0
+
 FUNC Add $F1 $F2
 RETURN ($F1 + $F2)
 ENDFUNC
+
 ECHO "ECHOING HELLO WORLD 2 TIMES"
+
 WHILE ($VAR1 < 2)
 ECHO "HELLO, WORLD!"
 PAUSE 1
 LET $VAR1 = Add [$VAR1, 1]
 ENDWHILE
+
 IF ($VAR1 > 1)
 ECHO "$VAR1 is more than 1"
 ENDIF
+
 PROC EchoDone
-ECHO $Input
+ECHO ("You typed: " & $Input)
 ENDPROC
+
 CALL EchoDone
 ECHO "SUCCESS!"
 EXIT "EVERYTHING-TEST"

@@ -17,6 +17,8 @@ const {
   str,
 } = require('arcsecond');
 
+const keywords = require('./keywords');
+
 // - Boolean
 // - Character
 // - String
@@ -34,33 +36,9 @@ const mapToString = mapToType('string');
 const mapToFloat = mapToType('float');
 const mapToArray = mapToType('array');
 const mapToVariableName = mapToType('variable');
-const mapToFuncName = mapToType('func');
-const mapToProcName = mapToType('proc');
+const mapToFuncName = ([value]) => value;
+const mapToProcName = ([value]) => value;
 const mapToComment = mapToType('comment');
-
-const keywords = {
-  '__COLUMN': '__COLUMN',
-  '__LINE': '__LINE',
-  'BEGIN': 'BEGIN',
-  'CALL': 'CALL',
-  'ECHO': 'ECHO',
-  'ELSE': 'ELSE',
-  'ENDFUNC': 'ENDFUNC',
-  'ENDIF': 'ENDIF',
-  'ENDPROC': 'ENDPROC',
-  'ENDWHILE': 'ENDWHILE',
-  'EXIT': 'EXIT',
-  'FUNC': 'FUNC',
-  'IF': 'IF',
-  'INPUT': 'INPUT',
-  'LET': 'LET',
-  'PAUSE': 'PAUSE',
-  'PROC': 'PROC',
-  'REM': 'REM',
-  'RETURN': 'RETURN',
-  'VAR': 'VAR',
-  'WHILE': 'WHILE',
-};
 
 const __columnKeyword = str(keywords.__COLUMN);
 const __lineKeyword = str(keywords.__LINE);
@@ -158,16 +136,18 @@ const quote = char('"');
 const singleQuote = char('\'');
 const space = char(' ').map(mapToNull);
 // TODO: Make sure name isn't in keywords or just a number
-const funcOrProcName = many1(choice(
+const funcOrProcName = many1(choice([
   letters,
   digits,
-));
+]));
 const funcName = funcOrProcName.map(mapToFuncName);
 const procName = funcOrProcName.map(mapToProcName);
 const variableName = sequenceOf([
   char('$'),
-  letters,
-  digits,
+  many1(choice([
+    letter,
+    digit,
+  ])).map(l => l.join('')),
 ]).map(x => x.join('')).map(mapToVariableName);
 const symbol = choice([
   char('!'),
@@ -216,27 +196,21 @@ const primitive = choice([
   stringValue,
 ]);
 
-const arrayValue = between(char('['))(char(']'))(sepBy(char(','), choice([
-  variableName,
-  primitive,
-]))).map(mapToArray);
-
-const expression = recursiveParser(() => (
+const arithmeticExpression = recursiveParser(() => (
   choice([
     between(startGroupOp)(endGroupOp)(sequenceOf([
       choice([
-        expression,
+        arithmeticExpression,
         primitive,
         variableName,
       ]),
       space,
       choice([
         arithmeticOperator,
-        booleanOperator,
       ]),
       space,
       choice([
-        expression,
+        arithmeticExpression,
         primitive,
         variableName,
       ]),
@@ -250,6 +224,45 @@ const expression = recursiveParser(() => (
   ])
 ));
 
+const booleanExpression = recursiveParser(() => (
+  choice([
+    between(startGroupOp)(endGroupOp)(sequenceOf([
+      choice([
+        booleanExpression,
+        primitive,
+        variableName,
+      ]),
+      space,
+      choice([
+        booleanOperator,
+      ]),
+      space,
+      choice([
+        booleanExpression,
+        primitive,
+        variableName,
+      ]),
+    ])).map(([left,, op,, right]) => ({
+      type: 'expression',
+      left,
+      right,
+      operator: op,
+    })),
+    variableName,
+  ])
+));
+
+const expression = choice([
+  arithmeticExpression,
+  booleanExpression,
+]);
+
+const arrayValue = between(char('['))(char(']'))(sepBy(str(', '))(choice([
+  variableName,
+  primitive,
+  expression,
+]))).map(mapToArray);
+
 // Should I call these expressions instead of statements?
 // Statements:
 // - Boolean
@@ -258,7 +271,7 @@ const expression = recursiveParser(() => (
 // - Float
 // - Array
 const booleanStatement = choice([
-  expression,
+  booleanExpression,
   booleanValue,
   // TODO: Determine valid boolean statement
 ]);
@@ -271,7 +284,7 @@ const stringStatement = choice([
   variableName, // TODO: Check that variable is type string
 ]);
 const floatStatement = choice([
-  expression,
+  arithmeticExpression,
   variableName,
   floatValue,
 ]);
@@ -288,34 +301,24 @@ const commentStatement = everythingUntil(newLine).map(mapToComment);
 const beginLine = sequenceOf([
   beginKeyword,
   space,
-  choice([
-    letters,
-    stringValue,
-  ]),
+  stringStatement
 ])
-.map(([keyword,, name]) => ({
+.map(([keyword,, program]) => ({
   type: 'statement',
   keyword: keyword,
-  value: name,
+  program: program && program.value,
 }));
 const callLine = sequenceOf([
   callKeyword,
   space,
-  choice([
-    procName,
-    sequenceOf([
-      funcName,
-      space,
-      sepBy(space, anyStatement),
-    ]),
-  ]),
+  sequenceOf([procName]),
 ])
-.map(([keyword, , name]) => {
-  // TODO: parse arguments
+.map(([keyword,, args]) => {
   return {
     type: 'statement',
     keyword: keyword,
-    value: name,
+    name: args[0],
+    arguments: args.slice(1),
   };
 });
 const echoLine = sequenceOf([
@@ -326,83 +329,184 @@ const echoLine = sequenceOf([
 .map(([keyword,, statement]) => ({
   type: 'statement',
   keyword: keyword,
-  statement: statement,
+  arguments: [statement],
 }));
 const elseLine = sequenceOf([
   elseKeyword,
-]);
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
 const endFuncLine = sequenceOf([
   endFuncKeyword,
-]);
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
 const endIfLine = sequenceOf([
   endIfKeyword,
-]);
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
 const endProcLine = sequenceOf([
   endProcKeyword,
-]);
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
 const endWhileLine = sequenceOf([
   endWhileKeyword,
-]);
+])
+.map(([keyword]) => ({
+  type: 'statement',
+  keyword: keyword,
+}));
 const exitLine = sequenceOf([
   exitKeyword,
-  possibly(everythingUntil(newLine)),
-]);
+  possibly(space),
+  possibly(stringStatement),
+])
+.map(([keyword,, program]) => ({
+  type: 'statement',
+  keyword: keyword,
+  program: program && program.value,
+}));
 const funcLine = sequenceOf([
   funcKeyword,
   space,
   funcName,
-]);
+  possibly(space),
+  possibly(sepBy(space)(variableName))
+])
+.map(([keyword,, name,, parameters]) => ({
+  type: 'statement',
+  keyword: keyword,
+  name: name,
+  parameters,
+}));
 const ifLine = sequenceOf([
   ifKeyword,
   space,
   booleanStatement,
-]).map(([keyword,, statement]) => [keyword, statement]);
+])
+.map(([keyword,, condition]) => ({
+  type: 'statement',
+  keyword: keyword,
+  condition,
+}));
 const inputLine = sequenceOf([
   inputKeyword,
   space,
   variableName,
   space,
   stringStatement,
-]);
+])
+.map(([keyword,, varName,, prompt]) => ({
+  type: 'statement',
+  keyword: keyword,
+  variable: varName,
+  prompt,
+}));
 const letLine = sequenceOf([
   letKeyword,
   space,
   variableName,
   space,
-  equalsOp,
+  assignOperator,
   space,
-  anyStatement,
-]).map(([keyword,, varName,, op,, statement]) => [keyword, varName, op, statement]);
+  choice([
+    expression,
+    primitive,
+    sequenceOf([
+      funcName,
+      space,
+      choice([
+        arrayValue,
+        variableName, // Can pass a variable of an array
+      ]),
+    ]).map(([name,, ...args]) => ({
+      type: 'funcCall',
+      name,
+      arguments: args,
+    })),
+  ]),
+])
+.map(([keyword,, varName,, op,, expr]) => {
+  return {
+    type: 'statement',
+    keyword: keyword,
+    variable: varName,
+    operator: op,
+    expression: expr,
+  };
+});
 const pauseLine = sequenceOf([
   pauseKeyword,
   space,
   floatStatement,
-]);
+])
+.map(([keyword,, arg]) => ({
+  type: 'statement',
+  keyword: keyword,
+  arguments: [arg],
+}));
 const procLine = sequenceOf([
   procKeyword,
   space,
   procName,
-]);
+])
+.map(([keyword,, name]) => ({
+  type: 'statement',
+  keyword: keyword,
+  name: name,
+}));
 const remLine = sequenceOf([
   remKeyword,
   space,
   commentStatement,
-]).map(([keyword,, statement]) => [keyword, statement]);
+])
+.map(([keyword,, statement]) => ({
+  type: 'statement',
+  keyword: keyword,
+  statement,
+}));
 const returnLine = sequenceOf([
   returnKeyword,
   space,
-  anyStatement,
-]);
+  expression,
+])
+.map(([keyword,, expr]) => {
+  return {
+    type: 'statement',
+    keyword: keyword,
+    expression: expr,
+  };
+});
 const varLine = sequenceOf([
   varKeyword,
   space,
   variableName,
-]).map(([keyword,, statement]) => [keyword, statement]);
+])
+.map(([keyword,, varName]) => ({
+  type: 'statement',
+  keyword: keyword,
+  variable: varName,
+}));
 const whileLine = sequenceOf([
   whileKeyword,
   space,
   booleanStatement,
-]);
+])
+.map(([keyword,, condition]) => ({
+  type: 'statement',
+  keyword: keyword,
+  condition,
+}));
 
 const codeLine = choice([
   beginLine,
@@ -426,11 +530,14 @@ const codeLine = choice([
   whileLine,
 ]);
 
-const script = many(sequenceOf([
+const blockParser = recursiveParser(() => (many(sequenceOf([
   codeLine,
   possibly(many(newLine)),
-]).map(([line]) => line));
+]).map(([line]) => line)).map(lines => ({
+  type: 'program',
+  lines,
+}))));
 
-const Parser = script;
+const Parser = blockParser;
 
 module.exports = Parser;

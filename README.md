@@ -68,6 +68,8 @@ Example: `(2 + (3 - 1) * (3 + 14 - 10)) / 4 % 9`
 
 - `==` - boolean compares the values to be equal
 - `!=` - boolean compares the values to be inequal
+- `>` - boolean compares the left is greater than the right
+- `<` - boolean compares the left is less than the right
 
 ## Examples
 
@@ -121,3 +123,14 @@ CALL EchoDone
 ECHO "SUCCESS!"
 EXIT "EVERYTHING-TEST"
 ```
+
+## Outstanding Issues
+
+- Array methods. Accessing individual elements of an array. Getting length of an array.
+- String methods. Accessing individual characters within a string. Converting characters to a string. Concatenating strings.
+- Strong typing. Much like CoBOL, SHIP will have strong typing that must be declared at declaration. This includes array max lengths.
+- STRUCT. Grouping data together. Only properties, no methods.
+- Struct methods. Accessing properties
+- Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
+- Remote STRUCTs. Since STRUCTS are simple data structures, common structs should be available to be imported. A good use case are things like IP packet headers. A function could accept a string and return an IP packet struct.
+- Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.

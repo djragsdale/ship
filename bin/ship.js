@@ -7,7 +7,11 @@ const main = async () => {
   const pathArg = process.argv[2];
   const resolvedPath = path.resolve(pathArg);
 
-  await execute(resolvedPath);
+  await execute(resolvedPath, {
+    stdin: process.stdin,
+    stdout: process.stdout,
+    stderr: process.stderr,
+  });
 };
 
 try {

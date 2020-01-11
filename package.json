@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A parser for a made up language",
   "main": "index.js",
+  "bin": {
+    "ship": "node ./bin/ship.js"
+  },
   "scripts": {
     "test": "jest"
   },

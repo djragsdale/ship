@@ -127,13 +127,13 @@ EXIT "EVERYTHING-TEST"
 ## Outstanding Issues
 
 - ELSE. Else blocks within IF blocks are not currenlty being parsed.
-- Array methods. Accessing individual elements of an array. Getting length of an array.
-- String methods. Accessing individual characters within a string. Converting characters to a string. String interpolation.
-  - `"something"->len` - float 9
-  - `"something"->char [2]` - char 'm'
-  - `'m'->str` - string "m"
-  - `"something"->str [4]` - string "thing"
-  - `"something"->str [0, 4]` - string "some"
+- String methods. Most has been included, but still missing string interpolation.
+  - Accessing individual characters within a string. Converting characters to a string. 
+    - `"something"->len` - float 9
+    - `"something"->char [2]` - char 'm'
+    - `'m'->str` - string "m"
+    - `"something"->slice [4]` - string "thing"
+    - `"something"->slice [0, 4]` - string "some"
 - Strong typing. Much like CoBOL, SHIP will have strong typing that must be declared at declaration. This includes array max lengths.
 - STRUCT. Grouping data together. Only properties, no methods.
 - Struct methods. Accessing properties

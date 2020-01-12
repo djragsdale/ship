@@ -1,11 +1,11 @@
-const evaluate = require('./lib/evaluate');
+const interpret = require('./lib/interpret');
 const execute = require('./lib/execute');
 const keywords = require('./lib/constants/keywords');
 const operators = require('./lib/constants/operators');
 const Parser = require('./lib/Parser');
 
 module.exports = {
-  evaluate,
+  interpret,
   execute,
   keywords,
   operators,

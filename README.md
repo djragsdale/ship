@@ -126,8 +126,14 @@ EXIT "EVERYTHING-TEST"
 
 ## Outstanding Issues
 
+- ELSE. Else blocks within IF blocks are not currenlty being parsed.
 - Array methods. Accessing individual elements of an array. Getting length of an array.
-- String methods. Accessing individual characters within a string. Converting characters to a string. Concatenating strings.
+- String methods. Accessing individual characters within a string. Converting characters to a string. String interpolation.
+  - `"something"->len` - float 9
+  - `"something"->char [2]` - char 'm'
+  - `'m'->str` - string "m"
+  - `"something"->str [4]` - string "thing"
+  - `"something"->str [0, 4]` - string "some"
 - Strong typing. Much like CoBOL, SHIP will have strong typing that must be declared at declaration. This includes array max lengths.
 - STRUCT. Grouping data together. Only properties, no methods.
 - Struct methods. Accessing properties
@@ -136,3 +142,4 @@ EXIT "EVERYTHING-TEST"
 - Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.
 - Compile-time ReferenceError. Currently a ReferenceError can only be received in runtime.
 - Consistent memory handling in runtime. `malloc` and `mget` that deal with Symbol references to memory locations.
+- Indentation supported

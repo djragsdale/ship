@@ -1,5 +1,5 @@
 {
-  "name": "ship",
+  "name": "@djragsdale/ship",
   "version": "0.1.0",
   "description": "A parser for a made up language",
   "main": "index.js",

@@ -1,0 +1,7 @@
+BEGIN "MATH"
+VAR $calculation
+VAR $something
+LET $something = 8375
+LET $calculation = ((7 + $something) - 4)
+ECHO ("$calculation is " & $calculation)
+EXIT "MATH"

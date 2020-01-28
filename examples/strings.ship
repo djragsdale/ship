@@ -1,0 +1,34 @@
+BEGIN "STRINGS"
+REM VAR $part1
+REM VAR $part2
+REM VAR $longText
+REM VAR $segment
+REM VAR $textLength
+REM 
+REM LET $part1 = "My very educated mother"
+REM ECHO ("$part1 is " & $part1)
+REM 
+REM LET $part2 = " just served us nine pies."
+REM ECHO ("$part2 is " & $part2)
+REM 
+REM LET $longText = ($part1 & $part2)
+REM ECHO ("$longText is " & $longText)
+REM 
+REM LET $segment = $longText->slice [17]
+REM REM LET $segment = "something"->slice [3]
+REM ECHO ("$segment is " & $segment)
+REM 
+REM REM Have example using both slice args
+
+VAR $longText
+VAR $segment
+
+LET $longText = "something"
+ECHO $longText
+LET $segment = $longText->slice [3]
+ECHO "after $segment"
+ECHO $segment
+
+REM LET $textLength = $segment->len
+REM ECHO ("$textLength is " & $textLength)
+EXIT "STRINGS"

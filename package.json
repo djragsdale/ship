@@ -1,10 +1,10 @@
 {
   "name": "@djragsdale/ship",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A parser for a made up language",
   "main": "index.js",
   "bin": {
-    "ship": "node ./bin/ship.js"
+    "ship": "./bin/ship.js"
   },
   "scripts": {
     "test": "jest"

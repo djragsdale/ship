@@ -11,6 +11,10 @@
   },
   "author": "David Ragsdale",
   "license": "GPL-3.0",
+  "repository": "git://github.com/djragsdale/ship.git",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "dependencies": {
     "arcsecond": "^2.0.3"
   }

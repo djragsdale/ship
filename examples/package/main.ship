@@ -1,0 +1,3 @@
+BEGIN "EXAMPLE"
+ECHO "Hello, world!"
+EXIT "EXAMPLE"

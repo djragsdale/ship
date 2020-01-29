@@ -16,4 +16,6 @@ const main = async () => {
 
 try {
   main();
-} catch (err) {}
+} catch (err) {
+  console.error('SHIP ERROR:', err); // eslint-disable-line no-console
+}

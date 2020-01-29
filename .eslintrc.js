@@ -9,7 +9,8 @@ module.exports = {
   },
   rules: {
     strict: ["error", "global"],
-    "import/no-extraneous-dependencies": ["error", {
+    'no-await-in-loop': ['off'],
+    'import/no-extraneous-dependencies': ['error', {
       devDependencies: true,
     }],
   },

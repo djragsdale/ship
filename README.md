@@ -51,8 +51,8 @@ No current method exists for error handling or exception catching. It will have 
 ### Operators
 
 - `=` - used in assignment operations
-- `(` - begin a group
-- `)` - close a group
+- `(` - begin an expression
+- `)` - close an expression
 
 #### Arithmetic
 

@@ -19,6 +19,7 @@ ECHO "$VAR1 is more than 1"
 ENDIF
 PROC EchoDone
 ECHO "DONE LOOPING."
+ECHO ("You typed: " & $Input)
 ENDPROC
 CALL EchoDone
 ECHO "SUCCESS!"

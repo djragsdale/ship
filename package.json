@@ -7,7 +7,7 @@
     "ship": "./bin/ship.js"
   },
   "scripts": {
-    "start": "node ./bin/ship.js examples/strings.ship",
+    "start": "node ./bin/ship.js examples/everything.ship",
     "lint": "eslint .",
     "test": "jest"
   },

@@ -1,13 +1,13 @@
 {
   "name": "@djragsdale/ship",
   "version": "0.2.0",
-  "description": "A parser for a made up language",
+  "description": "A parser and interpreter for a made up language",
   "main": "index.js",
   "bin": {
     "ship": "./bin/ship.js"
   },
   "scripts": {
-    "start": "node ./bin/ship.js examples/everything.ship",
+    "start": "node ./bin/ship.js examples/structs.ship",
     "lint": "eslint .",
     "test": "jest"
   },

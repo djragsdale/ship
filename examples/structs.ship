@@ -1,11 +1,11 @@
-BEGIN "STRUCTS"
-
 REM Declare STRUCTs
 STRUCT Car (
   year
   make
   model
 )
+
+BEGIN "STRUCTS"
 
 REM Declare array of cars
 VAR $garage

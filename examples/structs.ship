@@ -1,0 +1,60 @@
+BEGIN "STRUCTS"
+
+REM Declare STRUCTs
+STRUCT Car (
+  year
+  make
+  model
+)
+
+REM Declare array of cars
+VAR $garage
+VAR $garageIterator
+REM Declare temp vars for car prop
+VAR $tempCar
+VAR $inputYear
+VAR $inputMake
+VAR $inputModel
+VAR $inputGoAgain
+VAR $isAddingCars
+VAR $formattedCar
+
+FUNC FormatCarString $car
+RETURN ($car->year & " " & $car->make & " " & $car->model)
+ENDFUNC
+
+LET $garage = []
+LET $garageIterator = 0
+
+REM WHILE Loop for adding cars
+REM At the end, ask if they want to add another car
+LET $isAddingCars = True
+WHILE ($isAddingCars)
+LET $isAddingCars = False
+INPUT $inputYear "Year of car: "
+INPUT $inputMake "Make of car: "
+INPUT $inputModel "Model of car: "
+INPUT $inputGoAgain "Would you like to add another car? (Y/N)"
+LET $tempCar = Car
+LET $tempCar->year = $inputYear
+LET $tempCar->make = $inputMake
+LET $tempCar->mode = $inputModel
+LET $garage[$garageIterator] = $tempCar
+LET $garageIterator = ($garageIterator + 1)
+LET $isAddingCars = ($inputGoAgain == "Y")
+IF ($isAddingCars)
+ECHO "Adding another car..."
+ENDIF
+ENDWHILE
+
+REM When done looping for input, loop for output
+REM Print each car in a string formatted by a FUNC
+LET $garageIterator = 0
+WHILE ($garageIterator < $garage)
+LET $formattedCar = FormatCarString [$garage[$garageIterator]]
+ECHO $formattedCar
+LET $garageIterator = $garageIterator + 1
+ENDWHILE
+
+ECHO "Thank you for using SHIP Garage Service. Please come again."
+EXIT "STRUCTS"

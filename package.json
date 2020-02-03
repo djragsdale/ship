@@ -1,6 +1,6 @@
 {
   "name": "@djragsdale/ship",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A parser and interpreter for a made up language",
   "main": "index.js",
   "bin": {

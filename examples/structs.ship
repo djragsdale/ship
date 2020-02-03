@@ -20,7 +20,7 @@ VAR $isAddingCars
 VAR $formattedCar
 
 FUNC FormatCarString $car
-RETURN ($car["year"] & " " & $car["make"] & " " & $car["model"])
+RETURN (((($car["year"] & " ") & $car["make"]) & " ") & $car["model"])
 ENDFUNC
 
 LET $garage = []
@@ -29,7 +29,7 @@ LET $garageIterator = 0
 REM WHILE Loop for adding cars
 REM At the end, ask if they want to add another car
 LET $isAddingCars = True
-WHILE ($isAddingCars)
+WHILE $isAddingCars
 LET $isAddingCars = False
 INPUT $inputYear "Year of car: "
 INPUT $inputMake "Make of car: "
@@ -38,11 +38,11 @@ INPUT $inputGoAgain "Would you like to add another car? (Y/N)"
 LET $tempCar = Car
 LET $tempCar["year"] = $inputYear
 LET $tempCar["make"] = $inputMake
-LET $tempCar["mode"] = $inputModel
+LET $tempCar["model"] = $inputModel
 LET $garage[$garageIterator] = $tempCar
 LET $garageIterator = ($garageIterator + 1)
 LET $isAddingCars = ($inputGoAgain == "Y")
-IF ($isAddingCars)
+IF $isAddingCars
 ECHO "Adding another car..."
 ENDIF
 ENDWHILE
@@ -50,10 +50,10 @@ ENDWHILE
 REM When done looping for input, loop for output
 REM Print each car in a string formatted by a FUNC
 LET $garageIterator = 0
-WHILE ($garageIterator < $garage)
+WHILE ($garageIterator < $garage->len)
 LET $formattedCar = FormatCarString [$garage[$garageIterator]]
 ECHO $formattedCar
-LET $garageIterator = $garageIterator + 1
+LET $garageIterator = ($garageIterator + 1)
 ENDWHILE
 
 ECHO "Thank you for using SHIP Garage Service. Please come again."

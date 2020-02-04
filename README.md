@@ -133,6 +133,5 @@ EXIT "EVERYTHING-TEST"
 - Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
 - Remote STRUCTs. Since STRUCTS are simple data structures, common structs should be available to be imported. A good use case are things like IP packet headers. A function could accept a string and return an IP packet struct.
 - Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.
-- Compile-time ReferenceError. Currently a ReferenceError can only be received in runtime.
-- Consistent memory handling in runtime. `malloc` and `mget` that deal with Symbol references to memory locations.
+- C compiler with compile-time ReferenceError. Currently a ReferenceError can only be received in the interpreter.
 - Indentation supported

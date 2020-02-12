@@ -135,4 +135,6 @@ EXIT "EVERYTHING-TEST"
 - Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.
 - Compile-time ReferenceError. Currently a ReferenceError can only be received in runtime.
 - Consistent memory handling in runtime. `malloc` and `mget` that deal with Symbol references to memory locations.
-- Indentation supported
+- Indentation supported (space vs. whitespace)
+- Escaping quotes inside strings
+- String interpolation/formatting

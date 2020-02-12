@@ -1,26 +1,26 @@
 REM Declare STRUCTs
 STRUCT Car (
-  year
-  make
-  model
+  FLOAT year
+  STRING make
+  STRING model
 )
 
 BEGIN "STRUCTS"
 
 REM Declare array of cars
-VAR $garage
-VAR $garageIterator
+VAR ARRAY $garage
+VAR FLOAT $garageIterator
 REM Declare temp vars for car prop
-VAR $tempCar
-VAR $inputYear
-VAR $inputMake
-VAR $inputModel
-VAR $inputGoAgain
-VAR $isAddingCars
-VAR $formattedCar
+VAR Car $tempCar
+VAR FLOAT $inputYear
+VAR STRING $inputMake
+VAR STRING $inputModel
+VAR STRING $inputGoAgain
+VAR BOOL $isAddingCars
+VAR STRING $formattedCar
 
-FUNC FormatCarString $car
-RETURN (((($car["year"] & " ") & $car["make"]) & " ") & $car["model"])
+FUNC STRING:FormatCarString Car:$car
+RETURN (((($car["year"]->str & " ") & $car["make"]) & " ") & $car["model"])
 ENDFUNC
 
 LET $garage = []

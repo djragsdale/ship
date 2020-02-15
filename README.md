@@ -129,7 +129,8 @@ EXIT "EVERYTHING-TEST"
 - ELSE. Else blocks within IF blocks are not currenlty being parsed.
 - String methods. Most has been included, but still missing string interpolation.
 - Strong typing. Much like CoBOL, SHIP will have strong typing that must be declared at declaration. This includes array max lengths.
-- Struct methods. Accessing properties
+  - "Type Error" throws when assigning a value to a variable with a mismatched type.
+  - "Type Error" throws when using a value in an expression of the wrong type.
 - Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
 - Remote STRUCTs. Since STRUCTS are simple data structures, common structs should be available to be imported. A good use case are things like IP packet headers. A function could accept a string and return an IP packet struct.
 - Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.

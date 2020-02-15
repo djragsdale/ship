@@ -19,8 +19,13 @@ VAR STRING $inputGoAgain
 VAR BOOL $isAddingCars
 VAR STRING $formattedCar
 
+FUNC BOOL:StringIsYes STRING:$s
+RETURN ($s == "Y")
+ENDFUNC
+
 FUNC STRING:FormatCarString Car:$car
-RETURN (((($car["year"]->str & " ") & $car["make"]) & " ") & $car["model"])
+REM TODO: Use $car["year"]->str method
+RETURN (((($car["year"] & " ") & $car["make"]) & " ") & $car["model"])
 ENDFUNC
 
 LET $garage = []
@@ -36,12 +41,13 @@ INPUT $inputMake "Make of car: "
 INPUT $inputModel "Model of car: "
 INPUT $inputGoAgain "Would you like to add another car? (Y/N)"
 LET $tempCar = Car
+REM TODO: Use $inputYear->float method
 LET $tempCar["year"] = $inputYear
 LET $tempCar["make"] = $inputMake
 LET $tempCar["model"] = $inputModel
 LET $garage[$garageIterator] = $tempCar
 LET $garageIterator = ($garageIterator + 1)
-LET $isAddingCars = ($inputGoAgain == "Y")
+LET $isAddingCars = StringIsYes [$inputGoAgain]
 IF $isAddingCars
 ECHO "Adding another car..."
 ENDIF

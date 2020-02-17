@@ -19,5 +19,6 @@ ECHO ("$segment is " & $segment)
 
 REM Have example using both slice args
 LET $textLength = $segment->len
-ECHO ("$textLength is " & $textLength->str)
+REM Concatenation operations coerce values to strings
+ECHO ("$textLength is " & $textLength)
 EXIT "STRINGS"

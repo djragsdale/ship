@@ -10,11 +10,11 @@ The following types are available out of the box.
 
 #### Primitives
 
-- Boolean
-- Character
-- String
-- Float
-- Array
+- `ARRAY` - Boolean
+- `BOOL` - Character
+- `CHAR` - String
+- `FLOAT` - Float
+- `STRING` - Array
 
 #### Constructed types
 
@@ -47,14 +47,6 @@ The following types are available out of the box.
 - STRUCT - declare a memory structure. Specific properties are allocated memory ranges and are interpreted as one of the declared primitive types. Comes before BEGIN statement.
 
 No current method exists for error handling or exception catching. It will have to come at some point but isn't here yet.
-
-### Types
-
-- `ARRAY`
-- `BOOL`
-- `CHAR`
-- `FLOAT`
-- `STRING`
 
 ### Operators
 
@@ -135,12 +127,16 @@ EXIT "EVERYTHING"
 ## Outstanding Issues
 
 - ELSE. Else blocks within IF blocks are not currenlty being parsed.
+- Strong typing.
+  - ECHO should throw Type Errors
+  - Typed arrays.
 - String methods. Most has been included, but still missing string interpolation.
 - Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
 - Remote STRUCTs. Since STRUCTS are simple data structures, common structs should be available to be imported. A good use case are things like IP packet headers. A function could accept a string and return an IP packet struct.
 - Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.
-- Compile-time ReferenceError. Currently a ReferenceError can only be received in runtime.
-- Consistent memory handling in runtime. `malloc` and `mget` that deal with Symbol references to memory locations.
+- Compile-time errors. Currently the interpreter generates errors at runtime.
+- Consistent memory handling in runtime. Struct props should be identified separately or at least divied up by the memory manager.
+  - Int8Array for handling bytes
 - Indentation supported (space vs. whitespace)
 - Escaping quotes inside strings
 - String interpolation/formatting

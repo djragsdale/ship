@@ -1,11 +1,11 @@
 BEGIN "EVERYTHING"
 REM Declare all variables
-VAR $VAR1
-VAR $Input
+VAR FLOAT $VAR1
+VAR STRING $Input
 ECHO "Testing everything..."
 INPUT $Input "What should I output?"
 LET $VAR1 = 0
-FUNC Add $F1 $F2
+FUNC FLOAT:Add FLOAT:$F1 FLOAT:$F2
 RETURN ($F1 + $F2)
 ENDFUNC
 ECHO "ECHOING HELLO WORLD 2 TIMES"

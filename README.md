@@ -48,6 +48,14 @@ The following types are available out of the box.
 
 No current method exists for error handling or exception catching. It will have to come at some point but isn't here yet.
 
+### Types
+
+- `ARRAY`
+- `BOOL`
+- `CHAR`
+- `FLOAT`
+- `STRING`
+
 ### Operators
 
 - `=` - used in assignment operations
@@ -74,37 +82,36 @@ Example: `(2 + (3 - 1) * (3 + 14 - 10)) / 4 % 9`
 ## Examples
 
 ```
-VAR $calculation
-VAR $something
+VAR FLOAT $calculation
+VAR FLOAT $something
 LET $something = 8375
 LET $calculation = 7 + $something - 4
 ```
 
 ```
-BEGIN "LOOP-TEST"
+BEGIN "LOOPS"
 REM Declare all variables
-VAR $VAR1
+VAR FLOAT $VAR1
 ECHO "LOOP TEST BEGINNING..."
 LET $VAR1 = 0
-ECHO "ECHOING HELLO WORLD #1 TIMES"
-WHILE ($VAR1 < 1)
+ECHO "ECHOING HELLO WORLD 5 TIMES"
+WHILE ($VAR1 < 5)
 ECHO "HELLO, WORLD!"
 LET $VAR1 = ($VAR1 + 1)
 ENDWHILE
 ECHO "DONE LOOPING."
-ECHO "SUCCESS!"
-EXIT "LOOP-TEST"
+EXIT "LOOPS"
 ```
 
 ```
-BEGIN "EVERYTHING-TEST"
+BEGIN "EVERYTHING"
 REM Declare all variables
-VAR $VAR1
-VAR $Input
+VAR FLOAT $VAR1
+VAR STRING $Input
 ECHO "Testing everything..."
 INPUT $Input "What should I output?"
 LET $VAR1 = 0
-FUNC Add $F1 $F2
+FUNC FLOAT:Add FLOAT:$F1 FLOAT:$F2
 RETURN ($F1 + $F2)
 ENDFUNC
 ECHO "ECHOING HELLO WORLD 2 TIMES"
@@ -118,10 +125,11 @@ ECHO "$VAR1 is more than 1"
 ENDIF
 PROC EchoDone
 ECHO "DONE LOOPING."
+ECHO ("You typed: " & $Input)
 ENDPROC
 CALL EchoDone
 ECHO "SUCCESS!"
-EXIT "EVERYTHING-TEST"
+EXIT "EVERYTHING"
 ```
 
 ## Outstanding Issues

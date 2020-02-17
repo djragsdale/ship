@@ -1,7 +1,7 @@
 BEGIN "MATH"
-VAR $calculation
-VAR $something
+VAR FLOAT $calculation
+VAR FLOAT $something
 LET $something = 8375
 LET $calculation = ((7 + $something) - 4)
-ECHO ("$calculation is " & $calculation)
+ECHO ("$calculation is " & $calculation->str)
 EXIT "MATH"

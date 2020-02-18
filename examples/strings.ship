@@ -1,9 +1,9 @@
 BEGIN "STRINGS"
-VAR $part1
-VAR $part2
-VAR $longText
-VAR $segment
-VAR $textLength
+VAR STRING $part1
+VAR STRING $part2
+VAR STRING $longText
+VAR STRING $segment
+VAR FLOAT $textLength
 
 LET $part1 = "My very educated mother"
 ECHO ("$part1 is " & $part1)
@@ -15,10 +15,10 @@ LET $longText = ($part1 & $part2)
 ECHO ("$longText is " & $longText)
 
 LET $segment = $longText->slice [17]
-REM LET $segment = "something"->slice [3]
 ECHO ("$segment is " & $segment)
 
 REM Have example using both slice args
 LET $textLength = $segment->len
+REM Concatenation operations coerce values to strings
 ECHO ("$textLength is " & $textLength)
 EXIT "STRINGS"

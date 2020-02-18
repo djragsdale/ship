@@ -1,26 +1,31 @@
 REM Declare STRUCTs
 STRUCT Car (
-  year
-  make
-  model
+  FLOAT year
+  STRING make
+  STRING model
 )
 
 BEGIN "STRUCTS"
 
 REM Declare array of cars
-VAR $garage
-VAR $garageIterator
+VAR ARRAY<Car> $garage
+VAR FLOAT $garageIterator
 REM Declare temp vars for car prop
-VAR $tempCar
-VAR $inputYear
-VAR $inputMake
-VAR $inputModel
-VAR $inputGoAgain
-VAR $isAddingCars
-VAR $formattedCar
+VAR Car $tempCar
+VAR STRING $inputYear
+VAR STRING $inputMake
+VAR STRING $inputModel
+VAR STRING $inputGoAgain
+VAR BOOL $isAddingCars
+VAR STRING $formattedCar
 
-FUNC FormatCarString $car
-RETURN (((($car["year"] & " ") & $car["make"]) & " ") & $car["model"])
+FUNC BOOL:StringIsYes STRING:$s
+RETURN ($s == "Y")
+ENDFUNC
+
+FUNC STRING:FormatCarString Car:$car
+REM TODO: Use $car["year"]->str method
+RETURN (((($car["year"]->str & " ") & $car["make"]) & " ") & $car["model"])
 ENDFUNC
 
 LET $garage = []
@@ -36,12 +41,13 @@ INPUT $inputMake "Make of car: "
 INPUT $inputModel "Model of car: "
 INPUT $inputGoAgain "Would you like to add another car? (Y/N)"
 LET $tempCar = Car
-LET $tempCar["year"] = $inputYear
+REM TODO: Use $inputYear->float method
+LET $tempCar["year"] = $inputYear->float
 LET $tempCar["make"] = $inputMake
 LET $tempCar["model"] = $inputModel
 LET $garage[$garageIterator] = $tempCar
 LET $garageIterator = ($garageIterator + 1)
-LET $isAddingCars = ($inputGoAgain == "Y")
+LET $isAddingCars = StringIsYes [$inputGoAgain]
 IF $isAddingCars
 ECHO "Adding another car..."
 ENDIF

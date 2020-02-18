@@ -128,8 +128,6 @@ EXIT "EVERYTHING"
 
 - Parse errors on recognized line keywords should log a better Parse Error.
 - ELSE. Else blocks within IF blocks are not currenlty being parsed.
-- Strong typing.
-  - Typed arrays.
 - String methods. Most has been included, but still missing string interpolation.
 - Array concatenation. Concatenation coerces the types to strings.
 - Array joining.

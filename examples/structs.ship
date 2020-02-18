@@ -8,7 +8,7 @@ STRUCT Car (
 BEGIN "STRUCTS"
 
 REM Declare array of cars
-VAR ARRAY $garage
+VAR ARRAY<Car> $garage
 VAR FLOAT $garageIterator
 REM Declare temp vars for car prop
 VAR Car $tempCar

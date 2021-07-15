@@ -53,6 +53,7 @@ No current method exists for error handling or exception catching. It will have 
 - `=` - used in assignment operations
 - `(` - begin an expression
 - `)` - close an expression
+- `&` - concatenate
 
 #### Arithmetic
 
@@ -134,7 +135,8 @@ EXIT "EVERYTHING"
 - Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
 - Remote STRUCTs. Since STRUCTS are simple data structures, common structs should be available to be imported. A good use case are things like IP packet headers. A function could accept a string and return an IP packet struct.
 - Recursive functions. These actually already work :) But they may not in the future as an assembly compiler is created for SHIP.
-- C compiler with compile-time ReferenceError. Currently a ReferenceError can only be received in the interpreter.
+- SHIP->C compiler with compile-time ReferenceError. Currently a ReferenceError can only be received in the interpreter.
+- SHIP->WASM compiler with compile-time ReferenceError. Currently a ReferenceError can only be received in the interpreter.
 - Consistent memory handling in runtime. Struct props should be identified separately or at least divied up by the memory manager.
   - Int8Array for handling bytes
 - Indentation supported (space vs. whitespace)

@@ -130,7 +130,6 @@ EXIT "EVERYTHING"
 - Parse errors on recognized line keywords should log a better Parse Error.
 - ELSE. Else blocks within IF blocks are not currenlty being parsed.
 - String methods. Most has been included, but still missing string interpolation.
-- Array concatenation. Concatenation coerces the types to strings.
 - Array joining.
 - Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
 - Remote STRUCTs. Since STRUCTS are simple data structures, common structs should be available to be imported. A good use case are things like IP packet headers. A function could accept a string and return an IP packet struct.

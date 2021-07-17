@@ -24,7 +24,6 @@ RETURN ($s == "Y")
 ENDFUNC
 
 FUNC STRING:FormatCarString Car:$car
-REM TODO: Use $car["year"]->str method
 RETURN (((($car["year"]->str & " ") & $car["make"]) & " ") & $car["model"])
 ENDFUNC
 
@@ -41,7 +40,6 @@ INPUT $inputMake "Make of car: "
 INPUT $inputModel "Model of car: "
 INPUT $inputGoAgain "Would you like to add another car? (Y/N)"
 LET $tempCar = Car
-REM TODO: Use $inputYear->float method
 LET $tempCar["year"] = $inputYear->float
 LET $tempCar["make"] = $inputMake
 LET $tempCar["model"] = $inputModel

@@ -14,7 +14,7 @@ LET $arr1 = (["ArrayElement0", "ArrayElement1"] & ["ArrayElement2", "ArrayElemen
 LET $index = 0
 ECHO "Echoing each element of an array"
 WHILE ($index < $arr1->len)
-ECHO $arr[$index]
+ECHO $arr1[$index]
 LET $index = ($index + 1)
 ENDWHILE
 ECHO "DONE LOOPING."

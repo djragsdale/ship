@@ -2,25 +2,31 @@ BEGIN "EVERYTHING"
 REM Declare all variables
 VAR FLOAT $VAR1
 VAR STRING $Input
+
 ECHO "Testing everything..."
 INPUT $Input "What should I output?"
 LET $VAR1 = 0
+
 FUNC FLOAT:Add FLOAT:$F1 FLOAT:$F2
-RETURN ($F1 + $F2)
+  RETURN ($F1 + $F2)
 ENDFUNC
+
 ECHO "ECHOING HELLO WORLD 2 TIMES"
 WHILE ($VAR1 < 2)
-ECHO "HELLO, WORLD!"
-PAUSE 1
-LET $VAR1 = Add [$VAR1, 1]
+  ECHO "HELLO, WORLD!"
+  PAUSE 1
+  LET $VAR1 = Add [$VAR1, 1]
 ENDWHILE
+
 IF ($VAR1 > 1)
-ECHO "$VAR1 is more than 1"
+  ECHO "$VAR1 is more than 1"
 ENDIF
+
 PROC EchoDone
-ECHO "DONE LOOPING."
-ECHO ("You typed: " & $Input)
+  ECHO "DONE LOOPING."
+  ECHO ("You typed: " & $Input)
 ENDPROC
+
 CALL EchoDone
 ECHO "SUCCESS!"
 EXIT "EVERYTHING"

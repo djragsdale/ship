@@ -138,6 +138,5 @@ EXIT "EVERYTHING"
 - SHIP->WASM compiler with compile-time ReferenceError. Currently a ReferenceError can only be received in the interpreter.
 - Consistent memory handling in runtime. Struct props should be identified separately or at least divied up by the memory manager.
   - Int8Array for handling bytes
-- Indentation supported (space vs. whitespace)
 - Escaping quotes inside strings
 - String interpolation/formatting

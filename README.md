@@ -84,14 +84,26 @@ LET $calculation = 7 + $something - 4
 ```
 BEGIN "LOOPS"
 REM Declare all variables
-VAR FLOAT $VAR1
+VAR ARRAY<STRING> $arr1
+VAR FLOAT $index
+VAR FLOAT $loopCount
 ECHO "LOOP TEST BEGINNING..."
-LET $VAR1 = 0
+
+LET $loopCount = 0
 ECHO "ECHOING HELLO WORLD 5 TIMES"
-WHILE ($VAR1 < 5)
-ECHO "HELLO, WORLD!"
-LET $VAR1 = ($VAR1 + 1)
+WHILE ($loopCount < 5)
+  ECHO "HELLO, WORLD!"
+  LET $loopCount = ($loopCount + 1)
 ENDWHILE
+
+LET $arr1 = (["ArrayElement0", "ArrayElement1"] & ["ArrayElement2", "ArrayElement3"])
+LET $index = 0
+ECHO "Echoing each element of an array"
+WHILE ($index < $arr1->len)
+  ECHO $arr1[$index]
+  LET $index = ($index + 1)
+ENDWHILE
+
 ECHO "DONE LOOPING."
 EXIT "LOOPS"
 ```
@@ -101,25 +113,31 @@ BEGIN "EVERYTHING"
 REM Declare all variables
 VAR FLOAT $VAR1
 VAR STRING $Input
+
 ECHO "Testing everything..."
 INPUT $Input "What should I output?"
 LET $VAR1 = 0
+
 FUNC FLOAT:Add FLOAT:$F1 FLOAT:$F2
-RETURN ($F1 + $F2)
+  RETURN ($F1 + $F2)
 ENDFUNC
+
 ECHO "ECHOING HELLO WORLD 2 TIMES"
 WHILE ($VAR1 < 2)
-ECHO "HELLO, WORLD!"
-PAUSE 1
-LET $VAR1 = Add [$VAR1, 1]
+  ECHO "HELLO, WORLD!"
+  PAUSE 1
+  LET $VAR1 = Add [$VAR1, 1]
 ENDWHILE
+
 IF ($VAR1 > 1)
-ECHO "$VAR1 is more than 1"
+  ECHO "$VAR1 is more than 1"
 ENDIF
+
 PROC EchoDone
-ECHO "DONE LOOPING."
-ECHO ("You typed: " & $Input)
+  ECHO "DONE LOOPING."
+  ECHO ("You typed: " & $Input)
 ENDPROC
+
 CALL EchoDone
 ECHO "SUCCESS!"
 EXIT "EVERYTHING"

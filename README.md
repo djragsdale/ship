@@ -116,22 +116,25 @@ VAR STRING $Input
 
 ECHO "Testing everything..."
 INPUT $Input "What should I output?"
-LET $VAR1 = 0
 
 FUNC FLOAT:Add FLOAT:$F1 FLOAT:$F2
   RETURN ($F1 + $F2)
 ENDFUNC
 
 ECHO "ECHOING HELLO WORLD 2 TIMES"
-WHILE ($VAR1 < 2)
+LET $VAR1 = 0
+WHILE ($VAR1 < 3)
   ECHO "HELLO, WORLD!"
   PAUSE 1
+
+  IF ($VAR1 > 0)
+    ECHO "$VAR1 is more than 0"
+  ELSE
+    ECHO "$VAR1 is not more than 0"
+  ENDIF
+
   LET $VAR1 = Add [$VAR1, 1]
 ENDWHILE
-
-IF ($VAR1 > 1)
-  ECHO "$VAR1 is more than 1"
-ENDIF
 
 PROC EchoDone
   ECHO "DONE LOOPING."

@@ -146,7 +146,6 @@ EXIT "EVERYTHING"
 ## Outstanding Issues
 
 - Parse errors on recognized line keywords should log a better Parse Error.
-- ELSE. Else blocks within IF blocks are not currenlty being parsed.
 - String methods. Most has been included, but still missing string interpolation.
 - Array joining.
 - Remote FUNCs. Since functions in SHIP are pure, the idea is that functions can be located anywhere.
